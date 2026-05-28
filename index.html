@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>REGNUM — La Collection Ointe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter+Tight:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070605;
+    --bg-2:#0c0a08;
+    --char:#15130f;
+    --char-2:#1f1c16;
+    --ink:#ede4d4;
+    --ink-dim:#7a7468;
+    --ink-faint:#3a362e;
+    --gold:#c9a449;
+    --gold-soft:#8a6c1d;
+    --gold-bright:#e6c270;
+    --line:rgba(201,164,73,.14);
+    --line-2:rgba(237,228,212,.06);
+    --line-3:rgba(237,228,212,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Inter Tight',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--gold);color:#000}
+  .serif{font-family:'Cormorant Garamond',serif;font-weight:500;letter-spacing:.005em}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim)}
+  .gold{color:var(--gold)}
+  .container{max-width:1760px;margin:0 auto;padding:0 32px}
+  a{color:inherit;text-decoration:none}
+
+  /* NAV */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(12px);background:linear-gradient(to bottom,rgba(5,5,5,.85),rgba(5,5,5,.3));border-bottom:1px solid var(--line-2)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;gap:32px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand-mark{width:30px;height:30px;display:grid;place-items:center;border:1px solid var(--gold);transform:rotate(45deg)}
+  .brand-mark span{transform:rotate(-45deg);font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:14px;font-weight:600}
+  .brand-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:.25em}
+  .brand-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--ink-dim);margin-top:2px}
+  .nav-menu{display:flex;gap:30px;align-items:center}
+  .nav-menu a{font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:var(--ink);opacity:.7;transition:opacity .3s,color .3s;position:relative}
+  .nav-menu a:hover{opacity:1;color:var(--gold)}
+  .nav-actions{display:flex;gap:18px;align-items:center}
+  .nav-icon{width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--line-2);border-radius:50%;cursor:pointer;transition:all .3s}
+  .nav-icon:hover{border-color:var(--gold);color:var(--gold)}
+  .cart-count{position:absolute;top:-4px;right:-4px;background:var(--gold);color:#000;font-size:9px;font-weight:700;width:14px;height:14px;border-radius:50%;display:grid;place-items:center}
+
+  /* HERO */
+  .hero{min-height:100vh;position:relative;overflow:hidden;padding-top:90px}
+  .hero-bg{position:absolute;inset:0;background:
+    radial-gradient(ellipse 80% 60% at 70% 50%, rgba(201,164,73,.08), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(201,164,73,.04), transparent 60%),
+    linear-gradient(180deg,#070605 0%,#0a0807 60%,#070605 100%);
+  }
+  .hero-grain{position:absolute;inset:0;opacity:.4;mix-blend-mode:overlay;pointer-events:none;
+    background-image:
+      repeating-linear-gradient(0deg,rgba(212,175,55,.02) 0,rgba(212,175,55,.02) 1px,transparent 1px,transparent 3px),
+      radial-gradient(circle at 30% 50%, rgba(212,175,55,.04), transparent 40%);
+  }
+  .hero-particles{position:absolute;inset:0;pointer-events:none}
+  .hero-particles .p{position:absolute;width:2px;height:2px;background:var(--gold);border-radius:50%;opacity:.5;animation:float 18s linear infinite;box-shadow:0 0 6px var(--gold)}
+  @keyframes float{
+    0%{transform:translateY(100vh) translateX(0);opacity:0}
+    10%{opacity:.6}
+    90%{opacity:.4}
+    100%{transform:translateY(-10vh) translateX(40px);opacity:0}
+  }
+  .hero-inner{position:relative;padding:40px 0 80px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;min-height:calc(100vh - 90px)}
+  .hero-left{padding-left:32px}
+  .hero-eyebrow{display:flex;gap:14px;align-items:center;margin-bottom:30px}
+  .hero-eyebrow .dot{width:6px;height:6px;background:var(--gold);border-radius:50%;box-shadow:0 0 10px var(--gold)}
+  .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(56px,7.8vw,128px);line-height:.92;font-weight:500;letter-spacing:-.01em;color:var(--ink)}
+  .hero-title .ital{font-style:italic;color:var(--gold);font-weight:400}
+  .hero-title .stroke{-webkit-text-stroke:1px var(--gold);color:transparent}
+  .hero-sub{margin-top:28px;max-width:480px;font-size:14px;line-height:1.7;color:var(--ink-dim);font-weight:300}
+  .hero-cta{margin-top:46px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:14px;padding:18px 28px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-size:11px;letter-spacing:.28em;text-transform:uppercase;font-weight:600;cursor:pointer;position:relative;overflow:hidden;transition:all .4s}
+  .btn::before{content:"";position:absolute;inset:0;background:var(--gold);transform:translateX(-101%);transition:transform .5s cubic-bezier(.7,0,.3,1);z-index:0}
+  .btn:hover::before{transform:translateX(0)}
+  .btn:hover{color:#000}
+  .btn span{position:relative;z-index:1;display:flex;align-items:center;gap:14px}
+  .btn-ghost{border-color:var(--line-2);color:var(--ink)}
+  .btn-ghost::before{background:var(--ink)}
+  .hero-meta{display:flex;gap:36px;margin-top:60px;padding-top:30px;border-top:1px solid var(--line-2);max-width:540px}
+  .hero-meta .m{flex:1}
+  .hero-meta .m-k{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--ink-dim);text-transform:uppercase;margin-bottom:8px}
+  .hero-meta .m-v{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);font-style:italic}
+
+  .hero-right{position:relative;height:78vh;min-height:620px}
+  .hero-frame{position:absolute;inset:0;display:grid;grid-template-rows:auto 1fr;gap:18px;padding:20px 32px 20px 0}
+  .hero-frame-top{display:flex;justify-content:space-between;align-items:center}
+  .hero-product{position:relative;overflow:hidden;background:
+    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201,164,73,.10), transparent 65%),
+    linear-gradient(180deg,#0c0a08 0%,#050403 100%);
+    border:1px solid var(--line-2);
+  }
+  .hero-product-img{position:absolute;inset:0;display:grid;place-items:center}
+  .silhouette{width:80%;height:90%;position:relative}
+  .silhouette svg{width:100%;height:100%;filter:drop-shadow(0 30px 60px rgba(212,175,55,.15))}
+  .hero-product-overlay{position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(circle at 50% 100%, rgba(0,0,0,.8), transparent 50%);
+  }
+  .hero-product-tag{position:absolute;top:24px;left:24px;display:flex;flex-direction:column;gap:6px}
+  .hero-product-price{position:absolute;bottom:24px;right:24px;text-align:right}
+  .hero-product-price .lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--ink-dim);text-transform:uppercase}
+  .hero-product-price .val{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);font-style:italic}
+  .hero-thumbs{position:absolute;bottom:24px;left:24px;display:flex;gap:8px}
+  .hero-thumbs .t{width:48px;height:60px;border:1px solid var(--line-2);background:linear-gradient(135deg,#0a0a0a,#040404);cursor:pointer;transition:border-color .3s}
+  .hero-thumbs .t.active{border-color:var(--gold)}
+  .hero-thumbs .t:hover{border-color:var(--gold-soft)}
+
+  .marquee{border-block:1px solid var(--line-2);background:#050403;padding:26px 0;overflow:hidden;position:relative;z-index:2}
+  .marquee-track{display:flex;gap:60px;white-space:nowrap;animation:scroll 60s linear infinite;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;color:var(--ink);opacity:.85;align-items:center}
+  .marquee-track span{display:inline-flex;align-items:center;gap:60px}
+  .marquee-track .sep{font-family:'Inter Tight';font-size:10px;letter-spacing:.4em;color:var(--ink-dim);font-style:normal;text-transform:uppercase}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* COLLECTION */
+  .section{padding:160px 0;position:relative}
+  .section-head{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:48px;margin-bottom:80px;align-items:end}
+  .section-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .section-eyebrow::before{content:"";width:30px;height:1px;background:var(--gold)}
+  .section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(48px,5.5vw,84px);line-height:.95;font-weight:500;letter-spacing:-.01em}
+  .section-title .ital{font-style:italic;color:var(--gold)}
+  .section-desc{font-size:13px;line-height:1.8;color:var(--ink-dim);max-width:380px;margin-left:auto;font-weight:300}
+
+  .product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line-2)}
+  .product{padding:36px 28px;cursor:pointer;position:relative;transition:background .5s;border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+  .product:nth-child(4n){border-right:0}
+  .product:hover{background:rgba(201,164,73,.025)}
+  .product-frame{position:relative;aspect-ratio:3/4;background:linear-gradient(180deg,#0a0907 0%,#050403 100%);overflow:hidden;margin-bottom:28px}
+  .product-frame::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%, rgba(201,164,73,.06), transparent 70%);pointer-events:none}
+  .product-img{position:absolute;inset:0;display:grid;place-items:center;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+  .product:hover .product-img{transform:scale(1.04)}
+  .product-img svg{width:75%;height:85%}
+  .product-img img{width:100%;height:100%;object-fit:contain;mix-blend-mode:screen;position:absolute;inset:0}
+  .product-badge{position:absolute;top:14px;left:14px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;padding:5px 9px;border:1px solid var(--gold);background:rgba(0,0,0,.5)}
+  .product-num{position:absolute;top:14px;right:14px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--ink-dim)}
+  .product-quick{position:absolute;bottom:14px;left:14px;right:14px;display:flex;justify-content:space-between;align-items:center;opacity:0;transform:translateY(8px);transition:all .4s}
+  .product:hover .product-quick{opacity:1;transform:translateY(0)}
+  .product-quick .q-btn{background:var(--gold);color:#000;padding:9px 14px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;cursor:pointer}
+  .product-quick .q-add{width:32px;height:32px;border-radius:50%;border:1px solid var(--gold);background:rgba(0,0,0,.6);color:var(--gold);display:grid;place-items:center;cursor:pointer}
+  .product-info{display:flex;justify-content:space-between;align-items:start;gap:16px}
+  .product-name{font-family:'Cormorant Garamond',serif;font-size:22px;line-height:1.15;font-weight:500;margin-bottom:6px}
+  .product-cat{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--ink-dim);text-transform:uppercase}
+  .product-price{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:var(--gold);white-space:nowrap}
+  .product-colors{display:flex;gap:6px;margin-top:12px}
+  .swatch{width:11px;height:11px;border-radius:50%;border:1px solid rgba(255,255,255,.1)}
+
+  /* STORY */
+  .story{background:#050403;border-block:1px solid var(--line-2);padding:180px 0;position:relative;overflow:hidden}
+  .story-bg{position:absolute;inset:0;opacity:.5;pointer-events:none;
+    background:
+      radial-gradient(ellipse 50% 50% at 15% 30%, rgba(201,164,73,.05), transparent 70%),
+      radial-gradient(ellipse 50% 50% at 85% 70%, rgba(201,164,73,.04), transparent 70%);
+  }
+  .story-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:80px;align-items:center;position:relative}
+  .story-num{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:200px;line-height:1;color:transparent;-webkit-text-stroke:1px var(--gold-soft);opacity:.5;margin-bottom:-60px}
+  .story-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,4.4vw,68px);line-height:1.05;font-weight:500}
+  .story-title .ital{font-style:italic;color:var(--gold)}
+  .story-body{margin-top:28px;font-size:15px;line-height:1.8;color:var(--ink-dim);max-width:520px;font-weight:300}
+  .pillars{margin-top:50px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:560px}
+  .pillar{padding-top:18px;border-top:1px solid var(--line)}
+  .pillar-k{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+  .pillar-v{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:var(--ink)}
+
+  .story-visual{aspect-ratio:3/4;position:relative;background:linear-gradient(135deg,#0a0a0a,#020202);border:1px solid var(--line-2);overflow:hidden}
+  .story-visual::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%, rgba(212,175,55,.16), transparent 60%)}
+  .story-visual .glyph{position:absolute;inset:0;display:grid;place-items:center}
+  .story-visual .glyph svg{width:60%;opacity:.85}
+  .story-visual .corner{position:absolute;width:22px;height:22px;border:1px solid var(--gold);opacity:.7}
+  .story-visual .corner.tl{top:14px;left:14px;border-right:0;border-bottom:0}
+  .story-visual .corner.tr{top:14px;right:14px;border-left:0;border-bottom:0}
+  .story-visual .corner.bl{bottom:14px;left:14px;border-right:0;border-top:0}
+  .story-visual .corner.br{bottom:14px;right:14px;border-left:0;border-top:0}
+  .story-caption{position:absolute;bottom:24px;left:24px;right:24px;display:flex;justify-content:space-between;align-items:end}
+  .story-caption .l{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:var(--gold)}
+  .story-caption .r{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-dim);letter-spacing:.25em}
+
+  /* SYMBOLIC */
+  .symbolic{padding:180px 0;position:relative;overflow:hidden}
+  .sym-head{text-align:center;margin-bottom:80px}
+  .sym-head .verse{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(28px,3vw,42px);line-height:1.3;max-width:780px;margin:0 auto;color:var(--ink);font-weight:400}
+  .sym-head .verse::before,.sym-head .verse::after{content:"";display:inline-block;width:40px;height:1px;background:var(--gold);vertical-align:middle;margin:0 18px;opacity:.6}
+  .sym-head .ref{margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase}
+
+  .sym-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line-2);min-height:600px}
+  .sym-cell{background:transparent;padding:42px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2);transition:background .6s}
+  .sym-cell:nth-child(3n){border-right:0}
+  .sym-cell:nth-last-child(-n+3){border-bottom:0}
+  .sym-cell:hover{background:rgba(201,164,73,.02)}
+  .sym-cell .glyph{position:absolute;inset:0;display:grid;place-items:center;opacity:.35;transition:opacity .6s}
+  .sym-cell:hover .glyph{opacity:.55}
+  .sym-cell .glyph svg{width:65%;max-width:280px}
+  .sym-cell .meta{position:relative;z-index:1}
+  .sym-cell .meta .k{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+  .sym-cell .meta .v{font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;line-height:1.1}
+  .sym-cell .corner-num{position:relative;z-index:1;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:.25em}
+  .sym-cell.center{background:radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201,164,73,.05), transparent 70%)}
+  .sym-cell.center:hover{background:radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201,164,73,.08), transparent 70%)}
+
+  /* FEATURED */
+  .featured{padding:180px 0 80px;background:linear-gradient(180deg,#070605 0%,#0a0807 100%)}
+  .featured-hero{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:stretch;margin-bottom:80px}
+  .featured-card{position:relative;aspect-ratio:4/5;background:linear-gradient(135deg,#0a0805,#020202);border:1px solid var(--line);overflow:hidden}
+  .featured-card .img{position:absolute;inset:0;display:grid;place-items:center}
+  .featured-card .img svg{width:75%;filter:drop-shadow(0 40px 80px rgba(212,175,55,.2))}
+  .featured-card::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%, rgba(212,175,55,.1), transparent 65%)}
+  .featured-card .tag{position:absolute;top:24px;left:24px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;border:1px solid var(--gold);padding:6px 10px}
+  .featured-card .ttl{position:absolute;bottom:30px;left:30px;right:30px;display:flex;justify-content:space-between;align-items:end;gap:16px;z-index:2}
+  .featured-card .ttl h3{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:500;line-height:1;color:var(--ink)}
+  .featured-card .ttl h3 .ital{font-style:italic;color:var(--gold)}
+  .featured-card .ttl .price{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:24px;white-space:nowrap}
+
+  /* CTA */
+  .final-cta{padding:220px 0;text-align:center;position:relative;overflow:hidden;background:#050403;border-top:1px solid var(--line-2)}
+  .final-cta-bg{position:absolute;inset:0;opacity:1;pointer-events:none;
+    background:radial-gradient(ellipse 60% 60% at 50% 50%, rgba(201,164,73,.10), transparent 60%);
+  }
+  .final-cta .verse-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-bottom:30px;position:relative}
+  .final-headline{font-family:'Cormorant Garamond',serif;font-size:clamp(56px,8vw,140px);line-height:.95;font-weight:500;letter-spacing:-.015em;position:relative}
+  .final-headline .l1{display:block}
+  .final-headline .l2{display:block;font-style:italic;color:var(--gold)}
+  .final-sub{margin-top:40px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;color:var(--ink-dim);max-width:560px;margin-left:auto;margin-right:auto;position:relative}
+  .final-actions{margin-top:60px;display:flex;justify-content:center;gap:18px;position:relative}
+
+  /* FOOTER */
+  footer{padding:80px 0 30px;border-top:1px solid var(--line-2)}
+  .foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1.2fr;gap:48px;margin-bottom:60px}
+  .foot-brand .mark{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+  .foot-brand p{font-size:13px;line-height:1.8;color:var(--ink-dim);max-width:300px;font-weight:300}
+  .foot-col h4{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:20px}
+  .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .foot-col li a{font-size:13px;color:var(--ink-dim);transition:color .3s}
+  .foot-col li a:hover{color:var(--gold)}
+  .foot-news input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);padding:12px 0;color:var(--ink);font-size:13px;outline:none;margin-bottom:14px}
+  .foot-news input::placeholder{color:var(--ink-faint)}
+  .foot-news input:focus{border-color:var(--gold)}
+  .foot-news .btn{padding:13px 22px;font-size:10px}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:30px;border-top:1px solid var(--line-2);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase}
+  .foot-bottom .sep{margin:0 10px;opacity:.5}
+
+  /* Modal */
+  .modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;padding:32px;opacity:0;pointer-events:none;transition:opacity .4s}
+  .modal.open{opacity:1;pointer-events:auto}
+  .modal-card{max-width:1100px;width:100%;max-height:90vh;display:grid;grid-template-columns:1fr 1fr;gap:0;background:#080808;border:1px solid var(--line);overflow:hidden;transform:translateY(20px);transition:transform .5s}
+  .modal.open .modal-card{transform:translateY(0)}
+  .modal-img{aspect-ratio:1;background:radial-gradient(ellipse at 50% 50%, rgba(212,175,55,.15), transparent 60%),linear-gradient(135deg,#0a0a0a,#020202);display:grid;place-items:center;position:relative}
+  .modal-img svg{width:75%}
+  .modal-info{padding:48px;display:flex;flex-direction:column;justify-content:space-between;overflow-y:auto}
+  .modal-info h2{font-family:'Cormorant Garamond',serif;font-size:42px;line-height:1.05;font-weight:500;margin-bottom:8px}
+  .modal-info h2 .ital{font-style:italic;color:var(--gold)}
+  .modal-info .cat{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:.3em;text-transform:uppercase;margin-bottom:24px}
+  .modal-info .desc{font-size:13px;line-height:1.8;color:var(--ink-dim);margin-bottom:30px;font-weight:300}
+  .modal-opt{margin-bottom:24px}
+  .modal-opt-k{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--ink-dim);text-transform:uppercase;margin-bottom:10px}
+  .size-row{display:flex;gap:8px}
+  .size-pill{padding:9px 16px;border:1px solid var(--line);font-size:11px;letter-spacing:.15em;cursor:pointer;transition:all .25s;background:transparent;color:var(--ink)}
+  .size-pill:hover{border-color:var(--gold-soft)}
+  .size-pill.active{border-color:var(--gold);background:var(--gold);color:#000}
+  .color-row{display:flex;gap:10px;align-items:center}
+  .color-pill{display:flex;gap:8px;align-items:center;padding:6px 14px 6px 6px;border:1px solid var(--line);cursor:pointer;transition:border-color .25s}
+  .color-pill.active{border-color:var(--gold)}
+  .color-pill .dot{width:14px;height:14px;border-radius:50%}
+  .color-pill span{font-size:11px;letter-spacing:.15em;text-transform:uppercase}
+  .modal-buy{display:flex;gap:14px;align-items:stretch;margin-top:30px}
+  .modal-buy .price-big{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);font-style:italic;padding:0 20px;display:grid;place-items:center;border:1px solid var(--line)}
+  .modal-buy .btn{flex:1;justify-content:center;padding:20px}
+  .modal-close{position:absolute;top:20px;right:20px;width:40px;height:40px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;cursor:pointer;background:rgba(0,0,0,.6);color:var(--ink);transition:all .3s;z-index:3}
+  .modal-close:hover{border-color:var(--gold);color:var(--gold)}
+
+  @media (max-width: 1100px){
+    .hero-inner{grid-template-columns:1fr;gap:32px;padding:24px 0 60px}
+    .hero-left{padding-left:0}
+    .hero-right{height:60vh;min-height:480px}
+    .product-grid{grid-template-columns:repeat(2,1fr)}
+    .story-grid{grid-template-columns:1fr;gap:48px}
+    .sym-grid{grid-template-columns:1fr}
+    .featured-hero{grid-template-columns:1fr}
+    .section-head{grid-template-columns:1fr;gap:16px}
+    .section-desc{margin-left:0;max-width:none}
+    .foot-grid{grid-template-columns:1fr 1fr;gap:32px}
+    .nav-menu{display:none}
+    .modal-card{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- shared SVG defs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0d171"/>
+      <stop offset=".5" stop-color="#d4af37"/>
+      <stop offset="1" stop-color="#8a6c1d"/>
+    </linearGradient>
+    <linearGradient id="goldGradV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f0d171"/>
+      <stop offset="1" stop-color="#8a6c1d"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="brand">
+      <div class="brand-mark"><span>R</span></div>
+      <div>
+        <div class="brand-name">REGNUM</div>
+        <div class="brand-tag">EST. ANOINTED — MMXXVI</div>
+      </div>
+    </a>
+    <div class="nav-menu">
+      <a href="#collection">Collection</a>
+      <a href="#story">Manifeste</a>
+      <a href="#symbols">Symboles</a>
+      <a href="#featured">Atelier</a>
+      <a href="#journal">Journal</a>
+    </div>
+    <div class="nav-actions">
+      <div class="nav-icon" title="Rechercher">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </div>
+      <div class="nav-icon" title="Mon compte">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <div class="nav-icon" id="navCart" style="position:relative" title="Panier">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18l-2 12H5zM8 6V4a4 4 0 0 1 8 0v2"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-particles" id="particles"></div>
+
+  <div class="container hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <span class="dot"></span>
+        <span class="mono">Vol. I — Les Oints</span>
+        <span class="mono" style="color:var(--gold)">PE / 2026</span>
+      </div>
+      <h1 class="hero-title">
+        CE N'EST PAS<br/>
+        UNE <span class="stroke">MARQUE</span><br/>
+        C'EST UN <span class="ital">Royaume.</span>
+      </h1>
+      <p class="hero-sub">Une ligne de vêtements forgée pour la génération choisie. Là où la prophétie rencontre le fil, et où le silence parle plus fort que la foule. Porte ton héritage.</p>
+      <div class="hero-cta">
+        <button class="btn" onclick="scrollToId('collection')"><span>Entrer dans la Collection <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></button>
+        <button class="btn btn-ghost"><span>Voir le Manifeste</span></button>
+      </div>
+      <div class="hero-meta">
+        <div class="m"><div class="m-k">Dépôt 01</div><div class="m-v">Les Apôtres</div></div>
+        <div class="m"><div class="m-k">Édition</div><div class="m-v">144 pièces</div></div>
+        <div class="m"><div class="m-k">Atelier</div><div class="m-v">Milano · Lagos</div></div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-frame">
+        <div class="hero-frame-top">
+          <div class="mono">[ SKU ] RGN-01 / APOSTLE / NOIR</div>
+          <div class="mono">FIG. 01 — 07</div>
+        </div>
+        <div class="hero-product">
+          <div class="hero-product-img">
+            <div class="silhouette">
+              <img src="images/VareuseApotres.png" alt="The Apostles Jersey" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:screen;filter:brightness(1.05) contrast(1.05)"/>
+            </div>
+          </div>
+          <div class="hero-product-overlay"></div>
+          <div class="hero-product-tag">
+            <span class="mono" style="color:var(--gold)">[ Dépôt 01 — Les Oints ]</span>
+            <span class="mono">[ Façonné en 14 mains ]</span>
+          </div>
+          <div class="hero-product-price">
+            <div class="lbl">Brodé à la main</div>
+            <div class="val">$ 480.00</div>
+          </div>
+          <div class="hero-thumbs">
+            <div class="t active"></div>
+            <div class="t"></div>
+            <div class="t"></div>
+            <div class="t"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track" id="marquee">
+    <span><em>Oints</em><span class="sep">— Vol. I —</span><em>Royauté</em><span class="sep">— Dépôt 01 —</span><em>Prophétique</em><span class="sep">— MMXXVI —</span><em>Les Apôtres</em><span class="sep">— Édition Atelier —</span><em>Lumière dans les Ténèbres</em><span class="sep">— 144 Pièces —</span></span>
+    <span><em>Oints</em><span class="sep">— Vol. I —</span><em>Royauté</em><span class="sep">— Dépôt 01 —</span><em>Prophétique</em><span class="sep">— MMXXVI —</span><em>Les Apôtres</em><span class="sep">— Édition Atelier —</span><em>Lumière dans les Ténèbres</em><span class="sep">— 144 Pièces —</span></span>
+  </div>
+</div>
+
+<!-- COLLECTION -->
+<section class="section" id="collection">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">Chapitre I — Les Vêtements</div>
+        <h2 class="section-title">Armure <span class="ital">sacrée</span><br/>pour le saint moderne.</h2>
+      </div>
+      <div></div>
+      <p class="section-desc">Huit pièces, finies à la main dans notre atelier de Milano. Chaque vêtement est numéroté, scellé et accompagné d'une carte-verset du curateur. Porte comme un héritage, pas comme une tendance.</p>
+    </div>
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story" id="story">
+  <div class="story-bg"></div>
+  <div class="container">
+    <div class="story-grid">
+      <div>
+        <div class="story-num">I.</div>
+        <div class="section-eyebrow">Le Manifeste</div>
+        <h2 class="story-title">Nous habillons les <span class="ital">porteurs de lumière</span> — ceux qui ont traversé l'obscurité sans jamais faiblir.</h2>
+        <p class="story-body">REGNUM n'est pas une marque. C'est un reste. Une maison de vêtements bâtie pour la génération qui a hérité de promesses plus anciennes que les empires. Nous tissons le lin avec la prophétie, taillons des silhouettes qui ont du poids, et cousons dans chaque couture la conviction que tu n'as jamais été fait pour te fondre dans la masse. Tu as été fait pour être mis à part.</p>
+        <div class="pillars">
+          <div class="pillar"><div class="pillar-k">01 / Foi</div><div class="pillar-v">Conviction silencieuse.</div></div>
+          <div class="pillar"><div class="pillar-k">02 / Royauté</div><div class="pillar-v">Héritage.</div></div>
+          <div class="pillar"><div class="pillar-k">03 / Identité</div><div class="pillar-v">À part.</div></div>
+        </div>
+      </div>
+      <div class="story-visual">
+        <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+        <div class="glyph">
+          <svg viewBox="0 0 300 360" aria-hidden="true">
+            <g fill="url(#goldGradV)">
+              <path d="M150 30 L155 60 L170 80 L165 120 L180 130 L210 90 L240 80 L260 100 L240 130 L210 150 L195 180 L220 195 L260 200 L280 220 L240 230 L210 215 L195 230 L210 270 L230 290 L210 300 L185 280 L170 270 L150 290 L130 270 L115 280 L90 300 L70 290 L90 270 L105 230 L90 215 L60 230 L20 220 L40 200 L80 195 L105 180 L90 150 L60 130 L40 100 L60 80 L90 90 L120 130 L135 120 L130 80 L145 60 Z"/>
+            </g>
+          </svg>
+        </div>
+        <div class="story-caption">
+          <div class="l">« Ils s'élèveront avec des ailes. »</div>
+          <div class="r">FIG. 02 / AIGLE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SYMBOLIC -->
+<section class="symbolic" id="symbols">
+  <div class="container">
+    <div class="sym-head">
+      <div class="verse">Des ténèbres vers sa lumière admirable — une génération choisie, un sacerdoce royal.</div>
+      <div class="ref">— Référence / I Pierre II. IX</div>
+    </div>
+    <div class="sym-grid">
+      <div class="sym-cell">
+        <div class="glyph">
+          <svg viewBox="0 0 200 240" aria-hidden="true"><g fill="url(#goldGrad)">
+            <path d="M30 120 L50 60 L70 110 L100 50 L130 110 L150 60 L170 120 L170 160 L30 160 Z"/>
+            <circle cx="50" cy="58" r="6"/><circle cx="100" cy="46" r="6"/><circle cx="150" cy="58" r="6"/>
+            <rect x="30" y="170" width="140" height="14"/>
+            <rect x="30" y="190" width="140" height="4"/>
+          </g></svg>
+        </div>
+        <div class="meta"><div class="k">Sceau 01</div><div class="v">La <em style="color:var(--gold)">Couronne</em></div></div>
+        <div class="corner-num">FIG.01</div>
+      </div>
+      <div class="sym-cell center">
+        <div class="glyph">
+          <svg viewBox="0 0 300 300" aria-hidden="true">
+            <defs>
+              <radialGradient id="lionGlow" cx=".5" cy=".5" r=".5">
+                <stop offset="0" stop-color="#d4af37" stop-opacity=".4"/>
+                <stop offset="1" stop-color="#d4af37" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <circle cx="150" cy="150" r="140" fill="url(#lionGlow)"/>
+            <g transform="translate(50 35) scale(1)" fill="url(#goldGrad)" stroke="#8a6c1d" stroke-width=".4">
+              <path d="M40 60 Q55 30 90 40 Q105 20 135 30 Q160 35 165 65 Q175 75 170 95 Q180 110 165 125 Q175 140 160 155 L165 180 L150 175 L155 200 L140 195 L130 210 L120 200 L115 220 L100 205 L95 220 L85 200 L80 215 L70 200 L60 215 L55 195 L45 210 L40 190 L35 200 L30 180 L40 170 L25 155 L40 140 L25 125 L40 110 L30 95 L40 80 Z"/>
+            </g>
+          </svg>
+        </div>
+        <div class="meta"><div class="k">Sceau Central 02</div><div class="v">Lion de <em style="color:var(--gold)">Juda</em></div></div>
+        <div class="corner-num">FIG.02 / MARQUE PRINCIPALE</div>
+      </div>
+      <div class="sym-cell">
+        <div class="glyph">
+          <svg viewBox="0 0 200 240" aria-hidden="true"><g fill="url(#goldGrad)">
+            <rect x="90" y="40" width="20" height="160" rx="2"/>
+            <rect x="50" y="90" width="100" height="20" rx="2"/>
+            <circle cx="100" cy="100" r="32" fill="none" stroke="url(#goldGrad)" stroke-width="2" opacity=".6"/>
+          </g></svg>
+        </div>
+        <div class="meta"><div class="k">Sceau 03</div><div class="v">La <em style="color:var(--gold)">Croix</em></div></div>
+        <div class="corner-num">FIG.03</div>
+      </div>
+      <div class="sym-cell">
+        <div class="glyph">
+          <svg viewBox="0 0 200 240" aria-hidden="true"><g fill="url(#goldGrad)">
+            <path d="M100 30 L110 80 L150 60 L140 100 L170 130 L130 130 L130 180 L100 200 L70 180 L70 130 L30 130 L60 100 L50 60 L90 80 Z"/>
+          </g></svg>
+        </div>
+        <div class="meta"><div class="k">Sceau 04</div><div class="v">L'<em style="color:var(--gold)">Aigle</em></div></div>
+        <div class="corner-num">FIG.04</div>
+      </div>
+      <div class="sym-cell center">
+        <div class="glyph">
+          <svg viewBox="0 0 300 300" aria-hidden="true">
+            <g fill="url(#goldGrad)" opacity=".9">
+              <path d="M150 30 Q120 80 130 130 Q100 110 95 150 Q70 170 90 210 Q60 230 80 270 L150 285 L220 270 Q240 230 210 210 Q230 170 205 150 Q200 110 170 130 Q180 80 150 30 Z"/>
+            </g>
+          </svg>
+        </div>
+        <div class="meta"><div class="k">Sceau 05</div><div class="v">Le <em style="color:var(--gold)">Feu</em></div></div>
+        <div class="corner-num">FIG.05</div>
+      </div>
+      <div class="sym-cell">
+        <div class="glyph">
+          <svg viewBox="0 0 200 240" aria-hidden="true"><g fill="url(#goldGrad)">
+            <circle cx="100" cy="70" r="34" fill="none" stroke="url(#goldGrad)" stroke-width="6"/>
+            <rect x="96" y="100" width="8" height="120"/>
+            <rect x="96" y="160" width="22" height="6"/>
+            <rect x="96" y="180" width="32" height="6"/>
+          </g></svg>
+        </div>
+        <div class="meta"><div class="k">Sceau 06</div><div class="v">La <em style="color:var(--gold)">Clé</em></div></div>
+        <div class="corner-num">FIG.06</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED -->
+<section class="featured" id="featured">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">Chapitre II — L'Atelier</div>
+        <h2 class="section-title">Pièces <span class="ital">phares.</span></h2>
+      </div>
+      <div></div>
+      <p class="section-desc">Numérotées, brodées et finies à la main. Limitées au nombre des élus — cent quarante-quatre pièces par dépôt.</p>
+    </div>
+    <div class="featured-hero">
+      <div class="featured-card" data-id="apostles">
+        <div class="tag">Drop 01 / 144</div>
+        <div class="img">
+          <img src="images/VareuseApotres.png" alt="The Apostles Jersey" style="width:88%;height:88%;object-fit:contain;mix-blend-mode:screen;filter:brightness(1.05) contrast(1.05)"/>
+        </div>
+        <div class="ttl"><h3>La <span class="ital">Vareuse</span><br/>Les Apôtres — Noir</h3><div class="price">480 €</div></div>
+      </div>
+      <div class="featured-card" data-id="judah">
+        <div class="tag">Drop 02 / Atelier</div>
+        <div class="img">
+          <svg viewBox="0 0 400 520" aria-hidden="true">
+            <ellipse cx="200" cy="55" rx="30" ry="36" fill="#1a1a1a"/>
+            <rect x="180" y="80" width="40" height="20" fill="#0e0e0e"/>
+            <path d="M130 110 L80 140 L60 220 L90 240 L100 480 Q200 490 300 480 L310 240 L340 220 L320 140 L270 110 L240 130 Q200 145 160 130 Z" fill="#0a0a0a" stroke="#221f17"/>
+            <path d="M200 120 L200 480" stroke="url(#goldGrad)" stroke-width="2"/>
+            <g transform="translate(170 200)" fill="url(#goldGrad)"><path d="M0 40 L15 0 L30 35 L50 -5 L70 35 L85 0 L100 40 L100 60 L0 60 Z"/></g>
+            <text x="200" y="430" text-anchor="middle" fill="url(#goldGrad)" font-family="Cormorant Garamond, serif" font-style="italic" font-size="30">Judah</text>
+          </svg>
+        </div>
+        <div class="ttl"><h3>La Longue <span class="ital">Robe</span><br/>Judah — Onyx</h3><div class="price">1 240 €</div></div>
+      </div>
+    </div>
+    <div class="product-grid" id="featuredGrid"></div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="final-cta-bg"></div>
+  <div class="container">
+    <div class="verse-tag">— Dernier Mot —</div>
+    <h2 class="final-headline">
+      <span class="l1">C'est plus que</span>
+      <span class="l1">des vêtements.</span>
+      <span class="l2">C'est une identité.</span>
+    </h2>
+    <p class="final-sub">Porté par ceux qui refusent de disparaître. Fait pour les choisis, les appelés, les portés.</p>
+    <div class="final-actions">
+      <button class="btn" onclick="scrollToId('collection')"><span>Réclame ta Pièce <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></button>
+      <button class="btn btn-ghost"><span>Rejoindre le Reste</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="mark">
+          <div class="brand-mark"><span>R</span></div>
+          <div>
+            <div class="brand-name">REGNUM</div>
+            <div class="brand-tag">EST. ANOINTED — MMXXVI</div>
+          </div>
+        </div>
+        <p>Une maison de vêtements pour la génération choisie. Taillés, brodés et scellés dans nos ateliers de Milano et Lagos.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Boutique</h4>
+        <ul>
+          <li><a href="#">Dépôt 01 — Apôtres</a></li>
+          <li><a href="#">Dépôt 02 — Judah</a></li>
+          <li><a href="#">Pièces Atelier</a></li>
+          <li><a href="#">Archive</a></li>
+          <li><a href="#">Carte Cadeau</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Maison</h4>
+        <ul>
+          <li><a href="#">Manifeste</a></li>
+          <li><a href="#">Atelier</a></li>
+          <li><a href="#">Journal</a></li>
+          <li><a href="#">Presse</a></li>
+          <li><a href="#">Revendeurs</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Service</h4>
+        <ul>
+          <li><a href="#">Livraison</a></li>
+          <li><a href="#">Retours</a></li>
+          <li><a href="#">Guide des tailles</a></li>
+          <li><a href="#">Entretien</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="foot-col foot-news">
+        <h4>Le Reste</h4>
+        <p style="font-size:13px;color:var(--ink-dim);line-height:1.7;margin-bottom:18px;font-weight:300">Abonne-toi pour recevoir les dépôts, cartes-versets et dispatches de l'atelier.</p>
+        <input type="email" placeholder="ton.email@royaume.com" />
+        <button class="btn" style="padding:14px 22px"><span>S'inscrire</span></button>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© MMXXVI Regnum Atelier <span class="sep">·</span> Tous les vêtements scellés à la main</div>
+      <div>Milano <span class="sep">·</span> Lagos <span class="sep">·</span> Brooklyn</div>
+      <div>Confidentialité <span class="sep">·</span> CGV <span class="sep">·</span> Mentions légales</div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <button class="modal-close" id="modalClose">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-img" id="modalImg"></div>
+    <div class="modal-info">
+      <div>
+        <div class="cat" id="modalCat"></div>
+        <h2 id="modalName"></h2>
+        <p class="desc" id="modalDesc"></p>
+        <div class="modal-opt">
+          <div class="modal-opt-k">Taille</div>
+          <div class="size-row" id="sizeRow">
+            <button class="size-pill">XS</button>
+            <button class="size-pill">S</button>
+            <button class="size-pill active">M</button>
+            <button class="size-pill">L</button>
+            <button class="size-pill">XL</button>
+          </div>
+        </div>
+        <div class="modal-opt">
+          <div class="modal-opt-k">Couleur</div>
+          <div class="color-row" id="colorRow">
+            <button class="color-pill active"><span class="dot" style="background:#0a0a0a;border:1px solid #444"></span><span>Noir / Gold</span></button>
+            <button class="color-pill"><span class="dot" style="background:#1a1612"></span><span>Onyx</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-buy">
+        <div class="price-big" id="modalPrice">$ 480</div>
+        <button class="btn" id="modalAdd"><span>Ajouter à la Sacristie <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14m-7-7h14"/></svg></span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Floating gold particles in hero
+  const pBox = document.getElementById('particles');
+  for(let i = 0; i < 28; i++){
+    const p = document.createElement('div');
+    p.className = 'p';
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.animationDelay = (Math.random() * -18) + 's';
+    p.style.animationDuration = (10 + Math.random() * 16) + 's';
+    p.style.opacity = (.2 + Math.random() * .5);
+    p.style.transform = `scale(${.6 + Math.random() * 1.4})`;
+    pBox.appendChild(p);
+  }
+
+  const products = [
+    {id:'apostles', name:'Les Apôtres', cat:'Vareuse · Brodée', price:'480 €', badge:'Dépôt 01', glyph:'lion', img:'images/VareuseApotres.png', desc:'Lion de Juda brodé en fil d\'or, couronne sur la manche, bande rouge sang au poignet. Jacquard damassé noir. 144 pièces numérotées.'},
+    {id:'judah', name:'Judah', cat:'Longue Robe · Onyx', price:'1 240 €', badge:'Atelier', glyph:'crown', desc:'Robe longue en laine-cachemire avec passepoil or dans le dos. Emblème couronne brodé sur la poitrine. Taillée une fois, jamais reproduite.'},
+    {id:'sentinel', name:'Prophète', cat:'Vareuse · Prophétique', price:'480 €', badge:'Dépôt 01', glyph:'eagle', img:'images/Vareuseprophète.png', desc:'Aigle doré brodé en relief, accents violets, torche et livre de feu sur les manches. Pièce prophétique numérotée.'},
+    {id:'remnant', name:'Les Douze', cat:'Vareuse · Évangéliste', price:'480 €', badge:'Dépôt 01', glyph:'cross', img:'images/VareuseEvangéliste.png', desc:'Héritage apostolique. Étoiles, ichthus, colombe, couronne et étoile rayonnante brodés en or. « Les Douze – Héritage Apostolique. »'},
+    {id:'elect', name:'L\'Élu', cat:'Tee · Imprimé main', price:'180 €', badge:'Dépôt 01', glyph:'fire', desc:'Tee-shirt en coton épais, flamme dorée imprimée à la main dans le dos. À part, sans être séparé.'},
+    {id:'priest', name:'Prêtre', cat:'Manteau-Soutane', price:'1 480 €', badge:'Atelier', glyph:'key', desc:'Manteau-soutane moderne en laine technique. Doublure or intérieure, poche poitrine cachée pour la carte-verset.'},
+    {id:'sion', name:'Sion', cat:'Pantalon · Taillé', price:'360 €', badge:'Dépôt 01', glyph:'cross', desc:'Pantalon large taillé en laine crêpe épaisse. Marque maison en fil d\'or sur la poche arrière.'},
+    {id:'chosen', name:'Choisi', cat:'Casquette · Brodée', price:'140 €', badge:'Dépôt 01', glyph:'crown', desc:'Casquette six panneaux en coton ciré. Couronne brodée et étiquette intérieure « CHOISI ».'},
+  ];
+
+  function glyphSVG(kind){
+    if(kind==='lion') return `<svg viewBox="0 0 200 240"><g fill="url(#goldGrad)" stroke="#8a6c1d" stroke-width=".4"><path d="M40 60 Q55 30 90 40 Q105 20 135 30 Q160 35 165 65 Q175 75 170 95 Q180 110 165 125 Q175 140 160 155 L165 180 L150 175 L155 200 L140 195 L130 210 L120 200 L115 220 L100 205 L95 220 L85 200 L80 215 L70 200 L60 215 L55 195 L45 210 L40 190 L35 200 L30 180 L40 170 L25 155 L40 140 L25 125 L40 110 L30 95 L40 80 Z"/></g></svg>`;
+    if(kind==='eagle') return `<svg viewBox="0 0 300 300"><g fill="url(#goldGrad)"><path d="M150 30 L155 60 L170 80 L165 120 L180 130 L210 90 L240 80 L260 100 L240 130 L210 150 L195 180 L220 195 L260 200 L280 220 L240 230 L210 215 L195 230 L210 270 L230 290 L210 300 L185 280 L170 270 L150 290 L130 270 L115 280 L90 300 L70 290 L90 270 L105 230 L90 215 L60 230 L20 220 L40 200 L80 195 L105 180 L90 150 L60 130 L40 100 L60 80 L90 90 L120 130 L135 120 L130 80 L145 60 Z"/></g></svg>`;
+    if(kind==='crown') return `<svg viewBox="0 0 200 240"><g fill="url(#goldGrad)"><path d="M30 120 L50 60 L70 110 L100 50 L130 110 L150 60 L170 120 L170 160 L30 160 Z"/><circle cx="50" cy="58" r="6"/><circle cx="100" cy="46" r="6"/><circle cx="150" cy="58" r="6"/><rect x="30" y="170" width="140" height="14"/></g></svg>`;
+    if(kind==='cross') return `<svg viewBox="0 0 200 240"><g fill="url(#goldGrad)"><rect x="90" y="40" width="20" height="160" rx="2"/><rect x="50" y="90" width="100" height="20" rx="2"/></g></svg>`;
+    if(kind==='fire') return `<svg viewBox="0 0 300 300"><g fill="url(#goldGrad)"><path d="M150 30 Q120 80 130 130 Q100 110 95 150 Q70 170 90 210 Q60 230 80 270 L150 285 L220 270 Q240 230 210 210 Q230 170 205 150 Q200 110 170 130 Q180 80 150 30 Z"/></g></svg>`;
+    if(kind==='key') return `<svg viewBox="0 0 200 240"><g fill="url(#goldGrad)"><circle cx="100" cy="70" r="34" fill="none" stroke="url(#goldGrad)" stroke-width="6"/><rect x="96" y="100" width="8" height="120"/><rect x="96" y="160" width="22" height="6"/><rect x="96" y="180" width="32" height="6"/></g></svg>`;
+  }
+
+  function productCard(p, i){
+    const visual = p.img
+      ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:screen;position:absolute;inset:0;filter:brightness(1.05) contrast(1.05)"/>`
+      : glyphSVG(p.glyph);
+    return `
+      <div class="product" data-id="${p.id}">
+        <div class="product-frame">
+          <span class="product-badge">${p.badge}</span>
+          <span class="product-num">N° ${String(i+1).padStart(3,'0')}</span>
+          <div class="product-img">${visual}</div>
+          <div class="product-quick">
+            <button class="q-btn" data-buy="${p.id}">Ajout Rapide</button>
+            <button class="q-add" data-buy="${p.id}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14m-7-7h14"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="product-info">
+          <div>
+            <div class="product-name">${p.name}</div>
+            <div class="product-cat">${p.cat}</div>
+            <div class="product-colors">
+              <span class="swatch" style="background:#0a0a0a"></span>
+              <span class="swatch" style="background:#d4af37"></span>
+              <span class="swatch" style="background:#1a1612"></span>
+            </div>
+          </div>
+          <div class="product-price">${p.price}</div>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('productGrid').innerHTML = products.slice(0,8).map(productCard).join('');
+  document.getElementById('featuredGrid').innerHTML = products.slice(2,6).map(productCard).join('');
+
+  // Modal
+  const modal = document.getElementById('modal');
+  const modalImg = document.getElementById('modalImg');
+  const modalName = document.getElementById('modalName');
+  const modalCat = document.getElementById('modalCat');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalPrice = document.getElementById('modalPrice');
+
+  document.getElementById('modalClose').onclick = () => modal.classList.remove('open');
+  modal.addEventListener('click', e => { if(e.target === modal) modal.classList.remove('open'); });
+
+  document.body.addEventListener('click', e => {
+    const buy = e.target.closest('[data-buy]');
+    const card = e.target.closest('[data-id]');
+    if(buy){ e.stopPropagation(); addToCart(); return; }
+    if(card){
+      const p = products.find(x => x.id === card.dataset.id);
+      if(!p) return;
+      const parts = p.name.split(' ');
+      modalName.innerHTML = parts.length > 1
+        ? `${parts[0]} <span class="ital">${parts.slice(1).join(' ')}</span>`
+        : `<span class="ital">${p.name}</span>`;
+      modalCat.textContent = p.cat;
+      modalDesc.textContent = p.desc;
+      modalPrice.textContent = p.price;
+      modalImg.innerHTML = p.img
+        ? `<img src="${p.img}" alt="${p.name}" style="width:90%;height:90%;object-fit:contain;mix-blend-mode:screen;filter:brightness(1.05) contrast(1.05)"/>`
+        : glyphSVG(p.glyph);
+      modal.classList.add('open');
+    }
+  });
+
+  document.getElementById('sizeRow').addEventListener('click', e => {
+    if(e.target.classList.contains('size-pill')){
+      document.querySelectorAll('#sizeRow .size-pill').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+    }
+  });
+
+  document.getElementById('colorRow').addEventListener('click', e => {
+    const pill = e.target.closest('.color-pill');
+    if(pill){
+      document.querySelectorAll('#colorRow .color-pill').forEach(b => b.classList.remove('active'));
+      pill.classList.add('active');
+    }
+  });
+
+  let cart = 0;
+  function addToCart(){
+    cart++;
+    const c = document.getElementById('cartCount');
+    c.textContent = cart;
+    c.animate([{transform:'scale(1)'},{transform:'scale(1.4)'},{transform:'scale(1)'}],{duration:340,easing:'cubic-bezier(.3,1.5,.5,1)'});
+  }
+  document.getElementById('modalAdd').onclick = () => { addToCart(); modal.classList.remove('open'); };
+
+  function scrollToId(id){
+    const el = document.getElementById(id);
+    if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 60, behavior:'smooth'});
+  }
+  window.scrollToId = scrollToId;
+
+  // Single page-load fade — no scroll-tied reveals (they leave sections blank)
+  document.body.style.opacity = 0;
+  document.body.style.transition = 'opacity .9s ease-out';
+  requestAnimationFrame(() => { document.body.style.opacity = 1; });
+</script>
+</body>
+</html>
